@@ -48,6 +48,20 @@ except Exception as e:
 
 analytics.record_visit(session_id)
 
+# ============================================================================
+# DEVICE HANDLING: Force CPU on Linux (Streamlit Cloud), MPS/CUDA on local
+# ============================================================================
+import torch
+try:
+    if torch.cuda.is_available():
+        device = 'cuda'
+    elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+        device = 'mps'
+    else:
+        device = 'cpu'
+except:
+    device = 'cpu'
+
 def retrieve_with_reasoning(query, top_k=5):
     start = time.time()
     try:
@@ -56,10 +70,23 @@ def retrieve_with_reasoning(query, top_k=5):
         bm25_idx = np.argsort(bm25_scores)[min(-top_k*2,-5):][::-1]
         bm25_res = [(int(i), float(bm25_scores[i])) for i in bm25_idx if bm25_scores[i] > 0]
         
+        # Encode query and move to appropriate device
         q_emb = embedding_model.encode(query, convert_to_tensor=True)
-        sims = util.pytorch_cos_sim(q_emb, corpus_embeddings)[0]
-        sem_idx = np.argsort(sims.cpu().numpy())[min(-top_k*2,-5):][::-1]
-        sem_res = [(int(i), float(sims[i].item())) for i in sem_idx]
+        if hasattr(q_emb, 'to'):
+            q_emb = q_emb.to('cpu')  # Always use CPU for Streamlit Cloud
+        
+        # Get similarities (ensure tensors are on CPU)
+        corpus_embeddings_cpu = corpus_embeddings.to('cpu') if hasattr(corpus_embeddings, 'to') else corpus_embeddings
+        sims = util.pytorch_cos_sim(q_emb, corpus_embeddings_cpu)[0]
+        
+        # Convert to numpy safely
+        if hasattr(sims, 'cpu'):
+            sims_np = sims.cpu().numpy()
+        else:
+            sims_np = np.array(sims)
+        
+        sem_idx = np.argsort(sims_np)[min(-top_k*2,-5):][::-1]
+        sem_res = [(int(i), float(sims_np[i])) for i in sem_idx]
         
         rrf = {}
         k = 60
@@ -77,7 +104,8 @@ def retrieve_with_reasoning(query, top_k=5):
             verses.append({'chapter': v['chapter'], 'verse': v['verse'], 'text': v['english'], 'rrf': float(score), 'bm25': float(bm25), 'sem': float(sem)})
         
         return {'verses': verses, 'confidence': float(sorted_res[0][1]) if sorted_res else 0, 'latency': (time.time() - start) * 1000, 'count': len(verses)}
-    except:
+    except Exception as e:
+        st.error(f"Error during retrieval: {str(e)[:200]}")
         return {'verses': [], 'confidence': 0, 'latency': 0, 'count': 0}
 
 with st.sidebar:
