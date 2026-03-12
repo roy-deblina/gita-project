@@ -25,8 +25,22 @@ def load_retriever():
     if not RETRIEVER_PKL.exists():
         st.error("Error: retriever_state.pkl not found")
         st.stop()
+    
+    # Load pickle
     with open(RETRIEVER_PKL, 'rb') as f:
-        return pickle.load(f)
+        data = pickle.load(f)
+    
+    # Convert all tensors from MPS (Mac) to CPU (Linux/Cloud support)
+    import torch
+    try:
+        if 'corpus_embeddings' in data and hasattr(data['corpus_embeddings'], 'to'):
+            data['corpus_embeddings'] = data['corpus_embeddings'].to('cpu')
+        if 'embedding_model' in data:
+            data['embedding_model'].to('cpu')
+    except Exception as e:
+        st.warning(f"Note: Moved tensors to CPU: {str(e)[:100]}")
+    
+    return data
 
 @st.cache_resource
 def init_analytics():
@@ -47,20 +61,6 @@ except Exception as e:
     st.stop()
 
 analytics.record_visit(session_id)
-
-# ============================================================================
-# DEVICE HANDLING: Force CPU on Linux (Streamlit Cloud), MPS/CUDA on local
-# ============================================================================
-import torch
-try:
-    if torch.cuda.is_available():
-        device = 'cuda'
-    elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
-        device = 'mps'
-    else:
-        device = 'cpu'
-except:
-    device = 'cpu'
 
 def retrieve_with_reasoning(query, top_k=5):
     start = time.time()
