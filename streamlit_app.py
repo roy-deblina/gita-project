@@ -126,22 +126,6 @@ st.markdown(css, unsafe_allow_html=True)
 st.markdown('<h1>🕉️ Gita Wisdom Bot</h1>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Timeless guidance from the Bhagavad Gita<br>Ask Krishna about life, duty, fear, and purpose</div>', unsafe_allow_html=True)
 
-# Daily Wisdom Feature
-@st.cache_resource
-def get_daily_verse():
-    """Get a random verse for daily inspiration"""
-    retriever_state = load_retriever()
-    return random.choice(retriever_state['corpus'])
-
-daily_verse = get_daily_verse()
-st.info(f"""
-🌼 Krishna's Wisdom for Today
-
-"{daily_verse['english']}"
-
-— Bhagavad Gita {daily_verse['chapter']}.{daily_verse['verse']}
-""")
-
 @st.cache_resource
 def init_session():
     return str(uuid.uuid4())
@@ -390,6 +374,19 @@ if "messages" not in st.session_state:
 
 if "word_limit" not in st.session_state:
     st.session_state.word_limit = 100
+
+# Daily Wisdom Feature
+try:
+    daily_verse = random.choice(load_retriever()['corpus'])
+    st.info(f"""
+🌼 Krishna's Wisdom for Today
+
+"{daily_verse['english']}"
+
+— Bhagavad Gita {daily_verse['chapter']}.{daily_verse['verse']}
+""")
+except:
+    pass
 
 with st.sidebar:
     st.header("Settings")
