@@ -19,9 +19,140 @@ ANALYTICS_DB = DATA_DIR / 'analytics.db'
 
 ADMIN_PASSWORD = "gita_admin_2024"
 
-st.set_page_config(page_title="Gita RAG - Wisdom Platform", page_icon="🙏", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Gita RAG - Wisdom Platform", page_icon="🪔", layout="wide", initial_sidebar_state="expanded")
 
-st.markdown('<style>body{background:#f8f9fa;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto}.header-main{background:linear-gradient(135deg,#1f77b4,#1563a3);color:white;padding:2.5rem 3rem;border-radius:10px;margin-bottom:2rem}.paper-card{background:white;padding:1.2rem;border-radius:6px;border:1px solid #e0e0e0;margin:0.8rem 0}.admin-panel{background:#fff3cd;padding:1.5rem;border-radius:8px;border-left:4px solid #ff9800}.stButton>button{background-color:#1f77b4;border-radius:4px}.footer-section{background:#f5f5f5;padding:2rem;border-radius:8px;margin-top:2rem}</style>', unsafe_allow_html=True)
+# Enhanced CSS with better contrast and spiritual aesthetic
+css = """
+<style>
+    :root {
+        --primary-gold: #E0C097;
+        --dark-charcoal: #1E1D1C;
+        --cream: #FBF8F3;
+        --accent-bronze: #8B7355;
+    }
+    
+    body {
+        background-color: #FBF8F3;
+        font-family: 'Lora', 'Georgia', serif;
+        color: #1E1D1C;
+    }
+    
+    .header-main {
+        background: linear-gradient(135deg, #E0C097 0%, #D4A574 100%);
+        color: #1E1D1C;
+        padding: 2.5rem 3rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        border-left: 5px solid #8B7355;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .header-main h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1E1D1C;
+    }
+    
+    .header-main p {
+        margin: 0.5rem 0 0 0;
+        font-size: 1rem;
+        color: #3E3D3C;
+        opacity: 0.9;
+    }
+    
+    .paper-card {
+        background: white;
+        padding: 1.2rem;
+        border-radius: 8px;
+        border-left: 4px solid #E0C097;
+        margin: 0.8rem 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+    
+    .paper-card:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .paper-card b {
+        color: #1E1D1C;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+    
+    .paper-card a {
+        color: #E0C097;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .paper-card a:hover {
+        text-decoration: underline;
+    }
+    
+    .admin-panel {
+        background: linear-gradient(135deg, #FFF9E6 0%, #FFE8B6 100%);
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 5px solid #E0C097;
+        margin: 1rem 0;
+    }
+    
+    .admin-panel h3 {
+        color: #1E1D1C;
+        margin-top: 0;
+    }
+    
+    .footer-section {
+        background: linear-gradient(135deg, #E0C097 0%, #D4A574 100%);
+        padding: 2rem;
+        border-radius: 8px;
+        margin-top: 2rem;
+        color: #1E1D1C;
+        border-top: 3px solid #8B7355;
+    }
+    
+    .footer-section h3 {
+        color: #1E1D1C;
+        margin-top: 0;
+    }
+    
+    .footer-section ul {
+        list-style-position: inside;
+        color: #3E3D3C;
+    }
+    
+    .stButton > button {
+        background-color: #E0C097;
+        color: #1E1D1C;
+        border: none;
+        font-weight: 600;
+        border-radius: 6px;
+        padding: 0.6rem 1.2rem;
+    }
+    
+    .stButton > button:hover {
+        background-color: #D4A574;
+        color: #1E1D1C;
+    }
+    
+    .stMetric {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 3px solid #E0C097;
+    }
+    
+    .stDivider {
+        margin: 2rem 0;
+        background: linear-gradient(90deg, #E0C097, #E0C097);
+    }
+</style>
+"""
+
+st.markdown(css, unsafe_allow_html=True)
 
 @st.cache_resource
 def init_session():
@@ -187,12 +318,12 @@ with st.sidebar:
                 st.success("Added (dev mode)")
         st.markdown("</div>", unsafe_allow_html=True)
 
-st.markdown('<div class="header-main"><h1>Gita Wisdom Platform</h1><p>AI-Powered RAG System | Hybrid BM25 + Semantic Search | RRF Fusion</p></div>', unsafe_allow_html=True)
+st.markdown('<div class="header-main"><h1>🪔 Gita Wisdom Platform</h1><p>AI-Powered RAG System | Hybrid BM25 + Semantic Search | RRF Fusion</p></div>', unsafe_allow_html=True)
 
-t1, t2, t3, t4, t5, t6 = st.tabs(["Search", "Research", "Analytics", "Reviews", "Architecture", "About"])
+t1, t2, t3, t4, t5, t6 = st.tabs(["🔍 Search", "📚 Research", "📊 Analytics", "💬 Reviews", "🏗️ Architecture", "ℹ️ About"])
 
 with t1:
-    st.subheader("Search Bhagavad Gita")
+    st.subheader("🔍 Search Bhagavad Gita")
     c1, c2 = st.columns([3, 1])
     with c1:
         q = st.text_input("Question:", placeholder="How to handle challenges?")
@@ -234,7 +365,7 @@ with t1:
                     st.success("Thank you!")
 
 with t2:
-    st.subheader("Research Papers")
+    st.subheader("📚 Research Papers")
     papers_data = [
         ("Retrieval-Augmented Generation", "Lewis et al.", 2020, "https://arxiv.org/abs/2005.11401"),
         ("Dense Passage Retrieval for Open-Domain QA", "Karpukhin et al.", 2020, "https://arxiv.org/abs/2004.04906"),
@@ -247,7 +378,7 @@ with t2:
         st.markdown(f'<div class="paper-card"><b>{title}</b><br><small>{auth} ({year})</small><br><a href="{url}" target="_blank">Read Paper</a></div>', unsafe_allow_html=True)
 
 with t3:
-    st.subheader("Analytics Dashboard")
+    st.subheader("📊 Analytics Dashboard")
     summary = analytics.get_analytics_summary()
     k1, k2, k3, k4 = st.columns(4)
     k1.metric("Visits", summary['visits_today'])
@@ -263,7 +394,7 @@ with t3:
         st.plotly_chart(fig, use_container_width=True)
 
 with t4:
-    st.subheader("User Reviews")
+    st.subheader("💬 User Reviews")
     reviews = analytics.get_reviews(15)
     if reviews:
         for q, r, c, e, d in reviews:
@@ -274,7 +405,7 @@ with t4:
             st.divider()
 
 with t5:
-    st.subheader("System Architecture")
+    st.subheader("🏗️ System Architecture")
     info = """
 RAG Pipeline Flow:
 1. User Query Input
@@ -299,7 +430,7 @@ with t6:
     c1, c2 = st.columns([3, 1])
     with c1:
         about = """
-## About Project
+## ℹ️ About Project
 
 Gita Wisdom Platform is a production-ready RAG system:
 - Advanced retrieval architecture
