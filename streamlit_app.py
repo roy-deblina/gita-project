@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import torch
+import random
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 torch.set_default_device('cpu')
@@ -125,6 +126,22 @@ st.markdown(css, unsafe_allow_html=True)
 st.markdown('<h1>🕉️ Gita Wisdom Bot</h1>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Timeless guidance from the Bhagavad Gita<br>Ask Krishna about life, duty, fear, and purpose</div>', unsafe_allow_html=True)
 
+# Daily Wisdom Feature
+@st.cache_resource
+def get_daily_verse():
+    """Get a random verse for daily inspiration"""
+    retriever_state = load_retriever()
+    return random.choice(retriever_state['corpus'])
+
+daily_verse = get_daily_verse()
+st.info(f"""
+🌼 Krishna's Wisdom for Today
+
+"{daily_verse['english']}"
+
+— Bhagavad Gita {daily_verse['chapter']}.{daily_verse['verse']}
+""")
+
 @st.cache_resource
 def init_session():
     return str(uuid.uuid4())
@@ -199,6 +216,75 @@ def build_retriever_from_db():
     
     st.success(f"Retriever saved successfully")
 
+# TOPIC DETECTION AND VERSE MAPPING
+TOPIC_VERSES = {
+    "mind": [(6, 5), (6, 26)],
+    "fear": [(2, 19), (2, 20)],
+    "anger": [(2, 62), (2, 63)],
+    "failure": [(2, 47)],
+    "duty": [(3, 19), (18, 47)],
+    "purpose": [(4, 7), (18, 66)],
+    "peace": [(2, 70)],
+    "karma": [(2, 47), (4, 17)],
+    "action": [(3, 19), (2, 47)],
+    "desire": [(2, 55), (2, 62)],
+}
+
+RESPONSE_TEMPLATES = {
+    "mind": "True mastery comes from within. The mind is both your greatest tool and your deepest challenge. Through discipline, meditation, and unwavering focus, you can transcend the restless nature of the mind.",
+    "fear": "Fear dissolves when you remember your true nature—unchanging, eternal, and divine. Act with courage grounded in duty rather than attachment to outcomes. This is the way of a warrior.",
+    "anger": "Anger arises from unfulfilled desires and ego. Release attachment to outcomes, and anger loses its power. Respond with wisdom and compassion, not reaction.",
+    "failure": "What you call failure is merely a step in your journey. Success and failure are two sides of the same coin. Perform your duty with excellence, and surrender the results to a higher purpose.",
+    "duty": "Your sacred duty is your highest calling. Fulfill your responsibilities without attachment to reward. This righteous action purifies the soul and leads to liberation.",
+    "purpose": "Every soul has a unique purpose. Discover it by following your dharma with full commitment. Your purpose unfolds through sincere action and faith.",
+    "peace": "Peace is not the absence of challenge—it is the clarity of mind that comes from faith, duty, and detachment. Cultivate inner peace through meditation and wisdom.",
+    "karma": "You are the architect of your destiny through your actions. Every action creates consequences. Act with wisdom, intention, and righteousness.",
+    "action": "Act without clutching the fruits of your action. Do your duty fully, but release attachment to success or failure. This is the path to liberation.",
+    "desire": "Desires are the root of suffering. Through wisdom and discipline, transform desires into righteous aspirations. Seek not pleasure, but purpose.",
+}
+
+def detect_topic(query):
+    """Detect the emotional/spiritual topic from user query"""
+    query = query.lower()
+    
+    topic_keywords = {
+        "mind": ["mind", "focus", "discipline", "control mind", "thoughts"],
+        "fear": ["fear", "anxiety", "afraid", "scared", "nervous"],
+        "anger": ["anger", "angry", "rage", "furious"],
+        "failure": ["failure", "fail", "losing", "lost", "defeat"],
+        "duty": ["duty", "responsibility", "work", "dharma"],
+        "purpose": ["purpose", "meaning", "life", "why"],
+        "peace": ["peace", "stress", "calm", "anxious"],
+        "karma": ["karma", "consequences", "actions"],
+        "action": ["action", "act", "do", "perform"],
+        "desire": ["desire", "want", "attachment", "longing"],
+    }
+    
+    for topic, words in topic_keywords.items():
+        for word in words:
+            if word in query:
+                return topic
+    
+    return "general"
+
+def get_topic_verses(topic, corpus):
+    """Get verses related to a specific topic"""
+    if topic not in TOPIC_VERSES:
+        return []
+    
+    verses = []
+    for chapter, verse in TOPIC_VERSES[topic]:
+        for v in corpus:
+            if v["chapter"] == chapter and v["verse"] == verse:
+                verses.append({
+                    'chapter': v['chapter'],
+                    'verse': v['verse'],
+                    'text': v['english']
+                })
+                break
+    
+    return verses
+
 def limit_words(text, limit=100):
     words = text.split()
     return " ".join(words[:limit])
@@ -253,44 +339,39 @@ def retrieve_verses(query, top_k=2):
         return []
 
 def generate_response(query, verses, word_limit=100):
+    """Generate Krishna-style response from retrieved verses and templates"""
+    
+    # Detect topic first
+    topic = detect_topic(query)
+    
+    # Try to get topic-specific verses
+    retriever_state = load_retriever()
+    corpus = retriever_state['corpus']
+    topic_verses = get_topic_verses(topic, corpus)
+    
+    # Use topic verses if found, otherwise use retrieved verses
+    if topic_verses:
+        verses = topic_verses[:2]
+    
+    # Build verse context
     verse_text = ""
     if verses:
         for v in verses:
-            verse_text += f"\nGita {v['chapter']}.{v['verse']}: {v['text']}\n"
+            verse_text += f'"{v["text"]}"\n\n— Bhagavad Gita {v["chapter"]}.{v["verse"]}\n\n'
     
-    system_prompt = f"""You are a spiritual guide who shares wisdom from the Bhagavad Gita.
-
-Guidelines:
-- Maximum {word_limit} words
-- 3-4 short sentences
-- Calm, spiritual, and thoughtful tone
-- Focus on practical wisdom
-- Reference the verses provided if relevant
-- Answer in first person as if Krishna is speaking
-
-Here are relevant verses for context:
-{verse_text}
-
-Respond with clarity and compassion."""
+    # Generate response using template + verse
+    template_response = RESPONSE_TEMPLATES.get(topic, "Krishna teaches through the eternal wisdom of the Gita. Reflect on this verse and discover your truth.")
     
-    try:
-        from anthropic import Anthropic
-        client = Anthropic()
-        
-        message = client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=200,
-            system=system_prompt,
-            messages=[
-                {"role": "user", "content": query}
-            ]
-        )
-        
-        response = message.content[0].text
-        response = limit_words(response, word_limit)
-        return response
-    except:
-        return "I seek to understand your question more deeply. Please ask again, and I will share the wisdom of the Gita with you."
+    # Combine template with verse
+    if verses:
+        response = f"{template_response}\n\nThe Gita teaches:\n\n{verses[0]['text']}\n\n— Bhagavad Gita {verses[0]['chapter']}.{verses[0]['verse']}"
+    else:
+        response = template_response
+    
+    # Apply word limit
+    response = limit_words(response, word_limit)
+    
+    return response
 
 @st.cache_resource
 def init_analytics():
