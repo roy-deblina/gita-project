@@ -46,15 +46,18 @@ css = """
     /* Tagline styling */
     .tagline-section {
         text-align: center;
-        padding: 1.5rem 2rem;
-        background: linear-gradient(135deg, #F5E6D3 0%, #FBF8F3 100%);
-        border-bottom: 2px solid #E0C097;
-        margin-bottom: 2rem;
+        padding: 2rem 2rem;
+        background: linear-gradient(135deg, #D4A574 0%, #C49560 100%);
+        border-bottom: 3px solid #8B7355;
+        border-radius: 8px;
+        margin: 1.5rem 0 2rem 0;
         font-style: italic;
-        font-size: 1.1rem;
-        color: #3E3D3C;
-        letter-spacing: 0.5px;
-        font-weight: 500;
+        font-size: 1.25rem;
+        color: #FBF8F3;
+        letter-spacing: 1px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-top: 3px solid #E0C097;
     }
     
     .header-main {
@@ -269,6 +272,77 @@ css = """
         line-height: 1.8;
         color: #3E3D3C;
     }
+    
+    /* Decorative divider */
+    .divider-gold {
+        text-align: center;
+        margin: 2rem 0;
+        font-size: 1.5rem;
+        letter-spacing: 0.5rem;
+        color: #E0C097;
+    }
+    
+    /* Feature cards */
+    .feature-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 2px solid #E0C097;
+        margin: 1rem 0;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(224, 192, 151, 0.2);
+        border-color: #D4A574;
+    }
+    
+    .feature-card .emoji {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feature-card h4 {
+        color: #1E1D1C;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feature-card p {
+        color: #5F6B78;
+        font-size: 0.9rem;
+    }
+    
+    /* Social links styling */
+    .social-link {
+        display: inline-block;
+        padding: 0.7rem 1.5rem;
+        margin: 0.5rem;
+        background-color: #E0C097;
+        color: #1E1D1C;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    
+    .social-link:hover {
+        background-color: #D4A574;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        text-decoration: none;
+        color: #1E1D1C;
+    }
+    
+    /* Enhanced line separator */
+    .elegant-separator {
+        border-top: 2px solid #E0C097;
+        margin: 2rem 0;
+        opacity: 0.5;
+    }
 </style>
 """
 
@@ -480,6 +554,9 @@ st.markdown('<div class="header-main"><h1>🪔 Gita Wisdom Platform</h1><p>AI-Po
 # Tagline section
 st.markdown('<div class="tagline-section">✨ Find clarity through the eternal words of Sri Krishna ✨</div>', unsafe_allow_html=True)
 
+# Decorative element
+st.markdown('<div style="text-align:center;color:#E0C097;font-size:1.5rem;letter-spacing:1rem;margin:1rem 0;">· · ·</div>', unsafe_allow_html=True)
+
 t1, t2, t3, t4, t5, t6 = st.tabs(["🔍 Search", "📚 Research", "📊 Analytics", "💬 Reviews", "🏗️ Architecture", "ℹ️ About"])
 
 with t1:
@@ -507,22 +584,42 @@ with t1:
             st.divider()
             
             if res['verses']:
-                for i, v in enumerate(res['verses'], 1):
-                    st.markdown(f"**Gita {v['chapter']}.{v['verse']}**")
-                    st.markdown(f"_{v['text']}_")
-                    if show_reason:
-                        c1, c2, c3 = st.columns(3)
-                        c1.metric("BM25", f"{v['bm25']:.3f}")
-                        c2.metric("Semantic", f"{v['sem']:.3f}")
-                        c3.metric("RRF", f"{v['rrf']:.3f}")
-                    st.divider()
+                st.markdown('<div style="text-align:center;color:#E0C097;font-size:1.3rem;margin:1.5rem 0;">✦ Search Results ✦</div>', unsafe_allow_html=True)
+                st.markdown('<div class="elegant-separator"></div>', unsafe_allow_html=True)
                 
-                rating = st.slider("Rate:", 1, 5, 5)
-                comment = st.text_area("Feedback:", max_chars=500)
-                if st.button("Submit"):
-                    sentiment = "positive" if rating >= 4 else "neutral" if rating >= 3 else "negative"
-                    analytics.save_review(q, rating, comment, "user", sentiment)
-                    st.success("Thank you!")
+                for i, v in enumerate(res['verses'], 1):
+                    # Enhanced verse card
+                    verse_html = f"""
+                    <div class="verse-box">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                            <span style="font-size:1.3rem;font-weight:700;color:#1E1D1C;">🙏 Gita {v['chapter']}.{v['verse']}</span>
+                            <span style="background-color:#E0C097;color:#1E1D1C;padding:0.3rem 0.8rem;border-radius:4px;font-size:0.85rem;font-weight:600;">Result #{i}</span>
+                        </div>
+                        <p style="margin:0.8rem 0;font-style:italic;color:#3E3D3C;line-height:1.8;">{v['text']}</p>
+                    </div>
+                    """
+                    st.markdown(verse_html, unsafe_allow_html=True)
+                    
+                    if show_reason:
+                        rc1, rc2, rc3 = st.columns(3)
+                        rc1.metric("🔤 BM25", f"{v['bm25']:.3f}")
+                        rc2.metric("🧠 Semantic", f"{v['sem']:.3f}")
+                        rc3.metric("⚖️ RRF Score", f"{v['rrf']:.3f}")
+                    
+                    st.markdown('<div class="elegant-separator"></div>', unsafe_allow_html=True)
+                
+                st.markdown('<div style="text-align:center;color:#E0C097;margin-top:1.5rem;margin-bottom:1rem;">Share Your Feedback</div>', unsafe_allow_html=True)
+                rating = st.slider("Rate this response:", 1, 5, 5)
+                comment = st.text_area("Your feedback:", max_chars=500, placeholder="Help us improve...")
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("✅ Submit Feedback", use_container_width=True):
+                        sentiment = "positive" if rating >= 4 else "neutral" if rating >= 3 else "negative"
+                        analytics.save_review(q, rating, comment, "user", sentiment)
+                        st.success("🙏 Thank you for your feedback!")
+                with col2:
+                    if st.button("🔄 Clear", use_container_width=True):
+                        st.info("Ready for a new search")
 
 with t2:
     st.subheader("📚 Research Papers")
@@ -620,14 +717,13 @@ with t6:
 
 *Data Science & AI Enthusiast*
 
-📧 **Email**
-111deblina@gmail.com
+---
 
-💼 **LinkedIn**
-[Connect](https://linkedin.com)
+📧 [Email: 111deblina@gmail.com](mailto:111deblina@gmail.com)
 
-🐙 **GitHub**
-[View Repo](https://github.com/roy-deblina/gita-project)
+💼 [LinkedIn Profile](https://www.linkedin.com/in/deblina555/)
+
+🐙 [GitHub Repository](https://github.com/roy-deblina/gita-project)
 
 ---
 
@@ -642,18 +738,28 @@ with t6:
 
 footer = """
 <div class="footer-section">
-<h3>📈 System Evaluation (RAGAS)</h3>
-<ul>
+<div style="text-align:center;margin-bottom:1.5rem;">
+    <div style="font-size:1.8rem;margin-bottom:0.5rem;">·✦·</div>
+    <h3 style="margin:0.5rem 0;">📈 System Evaluation (RAGAS)</h3>
+</div>
+<ul style="margin:1rem 0;">
 <li>✓ <b>Faithfulness:</b> 0.92 - Accurate answer generation</li>
 <li>✓ <b>Answer Relevance:</b> 0.88 - Highly relevant results</li>
 <li>✓ <b>Context Precision:</b> 0.85 - Quality retrieval</li>
 <li>✓ <b>Context Recall:</b> 0.90 - Comprehensive coverage</li>
 </ul>
-<hr style="border-color:#D4A574;">
-<p style="text-align:center;font-size:0.9rem;color:#3E3D3C;">
-<b>Built with Streamlit & PyTorch</b><br>
-Contact: 111deblina@gmail.com<br>
-<span style="font-style:italic;">MIT License - Open Source Project</span>
+<hr style="border-color:#D4A574;margin:1.5rem 0;">
+<div style="padding:1.5rem;background:rgba(255,255,255,0.1);border-radius:8px;margin-bottom:1rem;">
+    <p style="text-align:center;font-size:0.95rem;color:#FBF8F3;margin:0;">
+    <b>🏆 Production-Ready RAG System</b><br>
+    Built with Streamlit & PyTorch | MIT License
+    </p>
+</div>
+<p style="text-align:center;font-size:0.85rem;color:rgba(251,248,243,0.9);margin:0;">
+    📧 Contact: <a href="mailto:111deblina@gmail.com" style="color:#FBF8F3;text-decoration:underline;">111deblina@gmail.com</a><br>
+    💼 <a href="https://www.linkedin.com/in/deblina555/" target="_blank" style="color:#FBF8F3;text-decoration:underline;">LinkedIn</a> | 
+    🐙 <a href="https://github.com/roy-deblina/gita-project" target="_blank" style="color:#FBF8F3;text-decoration:underline;">GitHub</a><br>
+    <span style="font-style:italic;margin-top:1rem;display:block;">© 2024 - Deblina Dey | All Rights Reserved</span>
 </p>
 </div>
 """
