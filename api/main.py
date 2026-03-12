@@ -3,10 +3,18 @@ Production-Grade FastAPI Server for Gita RAG
 Implements enterprise patterns: health checks, monitoring, rate limiting, error handling
 """
 
+import os
+import torch
+
+# Force CPU mode - ignore GPU/MPS hardware (compatibility across all platforms)
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+torch.set_default_device('cpu')
+
 import pickle
 import time
 import json
 import logging
+import io
 from typing import List, Optional
 from datetime import datetime
 from collections import defaultdict
@@ -148,8 +156,17 @@ async def startup_event():
     """Load models and initialize system on startup."""
     logger.info("Loading production models...")
     try:
+        # Custom unpickler: remap MPS (Mac GPU) → CPU (cross-platform compatible)
+        class CPU_Unpickler(pickle.Unpickler):
+            def find_class(self, module, name):
+                if module == 'torch.storage' and name == '_load_from_bytes':
+                    return lambda b: torch.load(io.BytesIO(b), map_location='cpu')
+                else:
+                    return super().find_class(module, name)
+        
+        # Load pickle with device remapping
         with open('data/retriever_state.pkl', 'rb') as f:
-            retriever_state = pickle.load(f)
+            retriever_state = CPU_Unpickler(f).load()
         
         state.corpus = retriever_state['corpus']
         state.bm25_index = retriever_state['bm25_index']

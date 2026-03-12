@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """Build retriever state for FastAPI server."""
 
+import os
+import torch
+
+# Force CPU mode - ignore GPU/MPS hardware (compatibility across all platforms)
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+torch.set_default_device('cpu')
+
 import sqlite3
 import pickle
 import numpy as np

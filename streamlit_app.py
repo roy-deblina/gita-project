@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+import os
+import torch
+
+# Force CPU mode - ignore GPU/MPS hardware (compatibility across all platforms)
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+torch.set_default_device('cpu')
+
 import streamlit as st
 import pickle, sqlite3, time, uuid, pandas as pd, numpy as np
 from pathlib import Path
@@ -22,25 +29,84 @@ def init_session():
 
 @st.cache_resource
 def load_retriever():
+    """Load or build retriever state. If pickle doesn't exist, build from scratch."""
     if not RETRIEVER_PKL.exists():
-        st.error("Error: retriever_state.pkl not found")
-        st.stop()
+        st.info("🔄 Building retriever from database (first run on this server)...")
+        build_retriever_from_db()
     
-    # Load pickle
+    # Custom unpickler: remap MPS (Mac GPU) → CPU (cross-platform compatible)
+    import io
+    
+    class CPU_Unpickler(pickle.Unpickler):
+        def find_class(self, module, name):
+            if module == 'torch.storage' and name == '_load_from_bytes':
+                return lambda b: torch.load(io.BytesIO(b), map_location='cpu')
+            else:
+                return super().find_class(module, name)
+    
+    # Load pickle with device remapping
     with open(RETRIEVER_PKL, 'rb') as f:
-        data = pickle.load(f)
-    
-    # Convert all tensors from MPS (Mac) to CPU (Linux/Cloud support)
-    import torch
-    try:
-        if 'corpus_embeddings' in data and hasattr(data['corpus_embeddings'], 'to'):
-            data['corpus_embeddings'] = data['corpus_embeddings'].to('cpu')
-        if 'embedding_model' in data:
-            data['embedding_model'].to('cpu')
-    except Exception as e:
-        st.warning(f"Note: Moved tensors to CPU: {str(e)[:100]}")
+        data = CPU_Unpickler(f).load()
     
     return data
+
+@st.cache_resource
+def build_retriever_from_db():
+    """Build retriever state from Gita database (runs once per deployment)."""
+    from rank_bm25 import BM25Okapi
+    from sentence_transformers import SentenceTransformer
+    
+    gita_db = DATA_DIR / 'gita.db'
+    if not gita_db.exists():
+        st.error(f"Error: {gita_db} not found. Cannot build retriever.")
+        st.stop()
+    
+    # Load corpus from SQLite
+    conn = sqlite3.connect(str(gita_db))
+    cursor = conn.cursor()
+    cursor.execute("SELECT chapter_number, verse_number, english FROM verses ORDER BY chapter_number, verse_number")
+    rows = cursor.fetchall()
+    conn.close()
+    
+    corpus = []
+    texts_for_bm25 = []
+    for chapter, verse, text in rows:
+        corpus.append({
+            'chapter': chapter,
+            'verse': verse,
+            'english': text,
+            'commentary': ''
+        })
+        texts_for_bm25.append(text.lower().split())
+    
+    st.write(f"✓ Loaded {len(corpus)} verses")
+    
+    # Build BM25 index
+    st.write("Building BM25 index...")
+    bm25_index = BM25Okapi(texts_for_bm25)
+    st.write(f"✓ BM25 index built with {bm25_index.corpus_size} documents")
+    
+    # Load embedding model and create embeddings
+    st.write("Loading embedding model and creating corpus embeddings...")
+    embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+    english_texts = [v['english'] for v in corpus]
+    corpus_embeddings = embedding_model.encode(english_texts, convert_to_tensor=True, show_progress_bar=False)
+    st.write(f"✓ Embeddings created: {corpus_embeddings.shape}")
+    
+    # Save state
+    retriever_state = {
+        'corpus': corpus,
+        'bm25_index': bm25_index,
+        'embedding_model': embedding_model,
+        'corpus_embeddings': corpus_embeddings
+    }
+    
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with open(RETRIEVER_PKL, 'wb') as f:
+        pickle.dump(retriever_state, f)
+    
+    st.success(f"✓ Retriever state saved to {RETRIEVER_PKL}")
+
 
 @st.cache_resource
 def init_analytics():
