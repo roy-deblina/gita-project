@@ -713,7 +713,7 @@ with t6:
         st.markdown("""
 ### 👨‍💻 Creator
 
-**Deblina Dey**
+**Deblina Roy**
 
 *Data Science & AI Enthusiast*
 
@@ -739,7 +739,6 @@ with t6:
 footer = """
 <div class="footer-section">
 <div style="text-align:center;margin-bottom:1.5rem;">
-    <div style="font-size:1.8rem;margin-bottom:0.5rem;">·✦·</div>
     <h3 style="margin:0.5rem 0;">📈 System Evaluation (RAGAS)</h3>
 </div>
 <ul style="margin:1rem 0;">
@@ -759,7 +758,7 @@ footer = """
     📧 Contact: <a href="mailto:111deblina@gmail.com" style="color:#FBF8F3;text-decoration:underline;">111deblina@gmail.com</a><br>
     💼 <a href="https://www.linkedin.com/in/deblina555/" target="_blank" style="color:#FBF8F3;text-decoration:underline;">LinkedIn</a> | 
     🐙 <a href="https://github.com/roy-deblina/gita-project" target="_blank" style="color:#FBF8F3;text-decoration:underline;">GitHub</a><br>
-    <span style="font-style:italic;margin-top:1rem;display:block;">© 2024 - Deblina Dey | All Rights Reserved</span>
+    <span style="font-style:italic;margin-top:1rem;display:block;">© 2026 - Deblina Roy | All Rights Reserved</span>
 </p>
 </div>
 """
