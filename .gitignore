@@ -37,11 +37,9 @@ env/
 *~
 .DS_Store
 
-# Large data files (> 100MB - GitHub limit)
-# Never commit .pkl files - use Supabase for cloud storage instead
-data/*.pkl
-notebooks/data/*.pkl
-*.pkl
+# Large data files (> 100MB - use Git LFS)
+# These are tracked via Git LFS in .gitattributes
+# Do NOT ignore - they're needed for app to run
 
 # Jupyter
 .ipynb_checkpoints/
