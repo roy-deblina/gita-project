@@ -561,13 +561,13 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("<h3 style='text-align: center; color: #E0C097;'>👋 Connect with Developer</h3>", unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown("[🔗 GitHub](https://github.com/roy-deblina)")
-    with col2:
-        st.markdown("[💼 LinkedIn](https://www.linkedin.com/in/deblina555/)")
-    with col3:
-        st.markdown('<a href="mailto:111deblina@gmail.com" style="color: #D4A574; text-decoration: none; font-size: 1rem;">✉️ Email</a>', unsafe_allow_html=True)
+    st.markdown("""
+    <div style="display: flex; justify-content: center; gap: 30px; margin: 20px 0;">
+        <a href="https://github.com/roy-deblina" target="_blank" style="color: #D4A574; text-decoration: none; font-size: 1.1rem; font-weight: 600; transition: all 0.3s;">🔗 GitHub</a>
+        <a href="https://www.linkedin.com/in/deblina555/" target="_blank" style="color: #D4A574; text-decoration: none; font-size: 1.1rem; font-weight: 600; transition: all 0.3s;">💼 LinkedIn</a>
+        <a href="mailto:111deblina@gmail.com" style="color: #D4A574; text-decoration: none; font-size: 1.1rem; font-weight: 600; transition: all 0.3s;">✉️ Email</a>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("---")
     st.markdown(
