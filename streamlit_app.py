@@ -565,7 +565,7 @@ with st.sidebar:
     <div style="display: flex; justify-content: center; gap: 30px; margin: 20px 0;">
         <a href="https://github.com/roy-deblina" target="_blank" style="color: #D4A574; text-decoration: none; font-size: 1.1rem; font-weight: 600; transition: all 0.3s;">🔗 GitHub</a>
         <a href="https://www.linkedin.com/in/deblina555/" target="_blank" style="color: #D4A574; text-decoration: none; font-size: 1.1rem; font-weight: 600; transition: all 0.3s;">💼 LinkedIn</a>
-        <a href="mailto:111deblina@gmail.com" style="color: #D4A574; text-decoration: none; font-size: 1.1rem; font-weight: 600; transition: all 0.3s;">✉️ Email</a>
+        <a href="mailto:111deblina@gmail.com" target="_blank" style="color: #D4A574; text-decoration: none; font-size: 1.1rem; font-weight: 600; transition: all 0.3s;">✉️ Email</a>
     </div>
     """, unsafe_allow_html=True)
     
