@@ -525,7 +525,6 @@ with st.sidebar:
             "- Provides Krishna-style wisdom instantly\n"
             "- Runs completely offline (no API costs)\n"
         )
-        st.info("Built as a **portfolio project** showcasing hybrid AI architecture.", icon="🎓")
     
     with st.expander("🎚️ Advanced Settings"):
         st.session_state.word_limit = st.slider(
@@ -557,7 +556,6 @@ with st.sidebar:
         "<p style='text-align: center; color: #8B7355; font-size: 0.85rem;'>"
         "Built with AI & Wisdom<br><br>"
         "Created by <b>Deblina Roy</b><br>"
-        "NYU MSDS Program<br>"
         "© 2026"
         "</p>",
         unsafe_allow_html=True
@@ -657,8 +655,8 @@ st.markdown("""
     Built with <span style="color: #D4A574;">❤️</span> using timeless wisdom + advanced AI
     </p>
     <p style="font-size: 0.85rem; margin-top: 0.5rem;">
-    <b>Gita Wisdom Bot</b> ✨ A portfolio project by <b>Deblina Roy</b><br>
-    NYU Master of Science in Data Science | 2026
+    <b>Gita Wisdom Bot</b> ✨ Created by <b>Deblina Roy</b><br>
+    © 2026
     </p>
     </div>
 """, unsafe_allow_html=True)
