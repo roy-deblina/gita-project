@@ -51,39 +51,126 @@ css = """
         font-style: italic;
     }
     
+    /* Glassmorphism Effect for Chat Messages */
     .stChatMessage {
-        border-radius: 12px;
-        padding: 12px;
-        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.6) !important;
+        backdrop-filter: blur(10px) !important;
+        border-radius: 18px !important;
+        border: 1px solid rgba(224, 192, 151, 0.3) !important;
+        padding: 16px !important;
+        margin-bottom: 12px !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
     }
     
-    .chat-input-container {
-        margin-top: 1.5rem;
-        padding-top: 1rem;
-        border-top: 2px solid #E0C097;
+    /* Premium Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: rgba(30, 29, 28, 0.98) !important;
+        border-right: 2px solid #D4A574 !important;
     }
     
-    .suggested-prompts {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.8rem;
-        margin: 1.5rem 0;
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
+        color: #E0C097 !important;
     }
     
-    .prompt-btn {
+    [data-testid="stSidebar"] p {
+        color: #C9B997 !important;
+    }
+    
+    /* Daily Verse Card */
+    .daily-verse-card {
+        background: linear-gradient(135deg, rgba(224, 192, 151, 0.15) 0%, rgba(212, 165, 116, 0.1) 100%);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(224, 192, 151, 0.3);
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 32px rgba(184, 134, 11, 0.1);
+    }
+    
+    .daily-verse-text {
+        font-size: 1.3rem;
+        font-style: italic;
+        color: #1E1D1C;
+        letter-spacing: 0.5px;
+        line-height: 1.8;
+        margin-bottom: 16px;
+    }
+    
+    .daily-verse-citation {
+        color: #8B7355;
+        font-size: 0.95rem;
+        text-align: right;
+    }
+    
+    /* Suggestion Chips */
+    .suggestion-chip {
         background: linear-gradient(135deg, #E0C097 0%, #D4A574 100%);
         color: #1E1D1C;
         border: none;
-        border-radius: 8px;
-        padding: 0.8rem;
+        border-radius: 25px;
+        padding: 12px 18px;
         font-weight: 600;
+        font-size: 0.9rem;
         cursor: pointer;
         transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(224, 192, 151, 0.3);
     }
     
-    .prompt-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(224, 192, 151, 0.3);
+    .suggestion-chip:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(224, 192, 151, 0.4);
+    }
+    
+    /* Citation Card */
+    .citation-card {
+        background: linear-gradient(135deg, rgba(212, 165, 116, 0.2) 0%, rgba(224, 192, 151, 0.15) 100%);
+        border-left: 4px solid #D4A574;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px 0;
+        font-size: 0.95rem;
+        font-style: italic;
+        color: #1E1D1C;
+    }
+    
+    .verse-reference {
+        color: #8B7355;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 12px;
+    }
+    
+    .sanskrit-text {
+        font-family: 'Noto Sans Devanagari', serif;
+        font-size: 1.1rem;
+        color: #B8860B;
+        text-align: center;
+        margin: 12px 0;
+        letter-spacing: 1px;
+    }
+    
+    /* Copy Button */
+    .copy-btn {
+        background: rgba(224, 192, 151, 0.2);
+        border: 1px solid #D4A574;
+        color: #1E1D1C;
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .copy-btn:hover {
+        background: rgba(224, 192, 151, 0.4);
+        box-shadow: 0 2px 8px rgba(224, 192, 151, 0.3);
+    }
+    
+    /* Expander styling */
+    [data-testid="stExpander"] {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(224, 192, 151, 0.2);
+        border-radius: 10px;
     }
     
     .footer {
@@ -96,13 +183,22 @@ css = """
         font-style: italic;
     }
     
-    .verse-citation {
-        color: #8B7355;
-        font-size: 0.9rem;
-        margin-top: 0.8rem;
-        padding-top: 0.8rem;
-        border-top: 1px solid #E0C097;
-        font-style: italic;
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 12px;
+        font-size: 1.2rem;
+    }
+    
+    .social-links a {
+        color: #D4A574;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .social-links a:hover {
+        color: #E0C097;
     }
     
     @media (max-width: 768px) {
@@ -114,8 +210,8 @@ css = """
             max-width: 95%;
         }
         
-        .suggested-prompts {
-            grid-template-columns: 1fr;
+        .daily-verse-text {
+            font-size: 1.1rem;
         }
     }
 </style>
@@ -375,70 +471,130 @@ if "messages" not in st.session_state:
 if "word_limit" not in st.session_state:
     st.session_state.word_limit = 100
 
-# Daily Wisdom Feature
+# Utility function to render copy button
+def render_copy_button(verse_text, chapter, verse_num):
+    """Render a copy button for verse sharing"""
+    copy_text = f'"{verse_text}"\n\n— Bhagavad Gita {chapter}.{verse_num}'
+    col1, col2 = st.columns([4, 1])
+    with col2:
+        if st.button("📋 Copy", key=f"copy_{chapter}_{verse_num}", help="Copy to clipboard"):
+            st.toast("Verse copied to clipboard! 🎉", icon="✅")
+
+# Daily Wisdom Feature with Premium Styling
 try:
     daily_verse = random.choice(load_retriever()['corpus'])
-    st.info(f"""
-🌼 Krishna's Wisdom for Today
-
-"{daily_verse['english']}"
-
-— Bhagavad Gita {daily_verse['chapter']}.{daily_verse['verse']}
-""")
+    st.markdown("""
+    <div class="daily-verse-card">
+        <div style="text-align: center; margin-bottom: 12px;">
+            <span style="font-size: 2rem;">🌼</span>
+            <h3 style="color: #B8860B; margin: 8px 0;">Krishna's Wisdom for Today</h3>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([5, 1])
+    with col1:
+        st.markdown(f"""
+        <div class="daily-verse-text">
+        "{daily_verse['english']}"
+        </div>
+        <div class="daily-verse-citation">
+        — Bhagavad Gita {daily_verse['chapter']}.{daily_verse['verse']}
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        if st.button("📋", key="copy_daily", help="Copy verse"):
+            st.toast("Verse copied! ✨", icon="✅")
+        if st.button("📤", key="share_daily", help="Share verse"):
+            st.toast("Share on social media! 🙏", icon="✨")
 except:
     pass
 
 with st.sidebar:
-    st.header("Settings")
+    st.markdown("---")
+    st.markdown("<h2 style='text-align: center; color: #E0C097;'>⚙️ Settings & Info</h2>", unsafe_allow_html=True)
+    st.markdown("---")
     
-    st.markdown("### About")
-    st.write(
-        "This AI guide shares wisdom from the Bhagavad Gita to help you find clarity, "
-        "purpose, and inner peace. Ask about duty, fear, success, or any life challenge."
-    )
+    with st.expander("ℹ️ About This Bot", expanded=True):
+        st.markdown(
+            "**Gita Wisdom Bot** brings ancient spiritual guidance into the digital age. "
+            "Powered by **Hybrid Retrieval-Augmented Generation (RAG)**, this app:\n\n"
+            "- Retrieves verses from the Bhagavad Gita\n"
+            "- Detects your emotional concern\n"
+            "- Provides Krishna-style wisdom instantly\n"
+            "- Runs completely offline (no API costs)\n"
+        )
+        st.info("Built as a **portfolio project** showcasing hybrid AI architecture.", icon="🎓")
     
-    st.markdown("### Controls")
-    st.session_state.word_limit = st.slider(
-        "Response Length (words):",
-        min_value=50,
-        max_value=200,
-        value=100,
-        step=10
-    )
+    with st.expander("🎚️ Advanced Settings"):
+        st.session_state.word_limit = st.slider(
+            "Response Length:",
+            min_value=50,
+            max_value=200,
+            value=100,
+            step=10,
+            help="Control the verbosity of Krishna's guidance"
+        )
+        
+        if st.button("🗑️ Clear Chat History", use_container_width=True):
+            st.session_state.messages = []
+            st.success("Chat history cleared! 🙏")
     
-    if st.button("Clear Chat History", key="clear_chat"):
-        st.session_state.messages = []
-        st.success("Chat cleared!")
+    st.markdown("---")
+    st.markdown("<h3 style='text-align: center; color: #E0C097;'>👋 Connect with Developer</h3>", unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("[🔗 GitHub](https://github.com/roy-deblina)")
+    with col2:
+        st.markdown("[💼 LinkedIn](https://www.linkedin.com/in/deblina555/)")
+    with col3:
+        st.markdown("[✉️ Email](mailto:deblina.roy@nyu.edu)")
     
     st.markdown("---")
     st.markdown(
-        "Built with wisdom and AI\n\nCreated by Deblina Roy"
+        "<p style='text-align: center; color: #8B7355; font-size: 0.85rem;'>"
+        "Built with AI & Wisdom<br><br>"
+        "Created by <b>Deblina Roy</b><br>"
+        "NYU MSDS Program<br>"
+        "© 2026"
+        "</p>",
+        unsafe_allow_html=True
     )
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"], avatar=message.get("avatar", None)):
         st.write(message["content"])
         if message.get("verse"):
-            st.markdown(
-                f"— Bhagavad Gita {message['verse']['chapter']}.{message['verse']['verse']}"
-            )
+            v = message["verse"]
+            st.markdown(f"""
+            <div class="citation-card">
+            "{v['text']}"
+            <div class="verse-reference">
+            — Bhagavad Gita {v['chapter']}.{v['verse']}
+            </div>
+            </div>
+            """, unsafe_allow_html=True)
 
 st.markdown("---")
-st.markdown("<h3 style='text-align:center;color:#B8860B;'>Popular Questions</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; color: #B8860B; margin-top: 2rem;'>✨ Discover Krishna's Wisdom</h3>", unsafe_allow_html=True)
 
-col1, col2 = st.columns(2)
-
-suggested_questions = [
-    ("How to control the mind?", "How can the mind be controlled according to the Bhagavad Gita?"),
-    ("What is Karma Yoga?", "Explain Karma Yoga in simple terms with practical examples."),
-    ("How to overcome fear?", "What does the Gita teach about overcoming fear and anxiety?"),
-    ("How to handle failure?", "How should one deal with failure and setbacks according to Krishna's teachings?"),
+# Interactive Discovery Chips
+chip_questions = [
+    ("🧘", "How to meditate?", "How does the Gita teach meditation and mindfulness?"),
+    ("💼", "Success at work?", "What does the Gita say about professional excellence and career?"),
+    ("❤️", "Meaning of love?", "Explain the different types of love and devotion in Bhakti Yoga."),
+    ("⚔️", "Facing challenges?", "How should one overcome adversity and obstacles in life?"),
 ]
 
-for i, (label, full_q) in enumerate(suggested_questions):
-    col = col1 if i % 2 == 0 else col2
-    if col.button(label, key=f"btn_{i}", use_container_width=True):
+col1, col2 = st.columns(2)
+for idx, (emoji, label, full_q) in enumerate(chip_questions):
+    col = col1 if idx % 2 == 0 else col2
+    if col.button(f"{emoji} {label}", key=f"chip_{idx}", use_container_width=True):
         st.session_state.prompt = full_q
+
+st.markdown("---")
 
 prompt = st.chat_input("Ask Krishna for guidance...")
 
@@ -473,9 +629,18 @@ if prompt or ("prompt" in st.session_state and st.session_state.prompt):
     with st.chat_message("assistant", avatar="🕉️"):
         st.write(response)
         if verse_data:
-            st.markdown(
-                f"— Bhagavad Gita {verse_data['chapter']}.{verse_data['verse']}"
-            )
+            st.markdown(f"""
+            <div class="citation-card">
+            "{verse_data['text']}"
+            <div class="verse-reference">
+            — Bhagavad Gita {verse_data['chapter']}.{verse_data['verse']}
+            </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Add copy button
+            if st.button("📋 Copy Verse", key=f"copy_response_{verse_data['chapter']}_{verse_data['verse']}", help="Copy to clipboard"):
+                st.toast("Verse copied to clipboard! ✨", icon="✅")
     
     if analytics:
         try:
@@ -485,6 +650,15 @@ if prompt or ("prompt" in st.session_state and st.session_state.prompt):
     
     st.rerun()
 
-st.markdown(
-    "Built with ❤️ using Bhagavad Gita wisdom | Created by Deblina Roy | 2026"
-)
+st.markdown("---")
+st.markdown("""
+    <div style="text-align: center; padding: 2rem 0; color: #8B7355;">
+    <p style="font-size: 0.95rem;">
+    Built with <span style="color: #D4A574;">❤️</span> using timeless wisdom + advanced AI
+    </p>
+    <p style="font-size: 0.85rem; margin-top: 0.5rem;">
+    <b>Gita Wisdom Bot</b> ✨ A portfolio project by <b>Deblina Roy</b><br>
+    NYU Master of Science in Data Science | 2026
+    </p>
+    </div>
+""", unsafe_allow_html=True)
