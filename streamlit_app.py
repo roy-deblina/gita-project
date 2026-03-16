@@ -221,6 +221,7 @@ st.markdown(css, unsafe_allow_html=True)
 
 st.markdown('<h1>🕉️ Gita Wisdom Bot</h1>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Timeless guidance from the Bhagavad Gita<br>Ask Krishna about life, duty, fear, and purpose</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align: center; color: #B8860B; font-size: 1rem; margin-bottom: 2rem; letter-spacing: 0.5px;"><i>Ancient Wisdom. Modern Guidance.</i></div>', unsafe_allow_html=True)
 
 @st.cache_resource
 def init_session():
@@ -433,26 +434,39 @@ def generate_response(query, verses, word_limit=100):
     if topic_verses:
         verses = topic_verses[:2]
     
-    # Build verse context (full text, not truncated)
-    verse_text = ""
-    if verses:
-        for v in verses:
-            verse_text += f'"{v["text"]}"\n\n— Bhagavad Gita {v["chapter"]}.{v["verse"]}\n\n'
-    
     # Generate response using template + verse
     template_response = RESPONSE_TEMPLATES.get(topic, "Krishna teaches through the eternal wisdom of the Gita. Reflect on this verse and discover your truth.")
     
-    # Combine template with verse (full verse text)
-    if verses:
-        response = f"{template_response}\n\nThe Gita teaches:\n\n{verses[0]['text']}\n\n— Bhagavad Gita {verses[0]['chapter']}.{verses[0]['verse']}"
-    else:
-        response = template_response
+    # Create reflection based on topic
+    reflection_dict = {
+        "mind": "The Gita reminds us that the mind can be our greatest friend or enemy. With consistent practice and awareness, we cultivate the ability to guide it toward peace and clarity.",
+        "fear": "Remember that courage is not the absence of fear, but action in spite of it. Your true nature is eternal and unchanging—embrace this truth.",
+        "anger": "By releasing attachment to outcomes and responding with wisdom rather than reaction, you transform anger into compassion and strength.",
+        "failure": "Each setback is a teacher. When you act with full commitment but detach from results, failure becomes a stepping stone to wisdom.",
+        "duty": "Your sacred duty is the highest path to spiritual growth. When performed without attachment to reward, it purifies the soul.",
+        "purpose": "Your purpose emerges naturally when you align your actions with your dharma. Trust your unique path and contribute your gifts to the world.",
+        "peace": "Inner peace is not found in changing external circumstances, but in transforming your relationship with them through wisdom and faith.",
+        "karma": "You are not bound by past karma—your present choices write your future. Choose wisely, act righteously, and evolve.",
+        "action": "The secret of freedom lies in right action. Do your duty fully, but surrender attachment to the fruits of your labor.",
+        "desire": "Transform your desires into righteous aspirations. True happiness comes not from fulfilling every want, but from alignment with your highest purpose.",
+    }
     
-    # Apply word limit only to template response, not the verse
+    reflection = reflection_dict.get(topic, "Reflect on this wisdom and apply it to your unique situation. Krishna's teachings are timeless for all ages.")
+    
+    # Combine template with verse and reflection (3-section format)
+    if verses:
+        response = f"{template_response}\n\n{verses[0]['text']}\n\n— Bhagavad Gita {verses[0]['chapter']}.{verses[0]['verse']}\n\n{reflection}"
+    else:
+        response = f"{template_response}\n\n{reflection}"
+    
+    # Apply word limit only to template response, not the verse or reflection
     template_words = template_response.split()
     if len(template_words) > word_limit:
         template_response = " ".join(template_words[:word_limit])
-        response = f"{template_response}\n\nThe Gita teaches:\n\n{verses[0]['text']}\n\n— Bhagavad Gita {verses[0]['chapter']}.{verses[0]['verse']}" if verses else template_response
+        if verses:
+            response = f"{template_response}\n\n{verses[0]['text']}\n\n— Bhagavad Gita {verses[0]['chapter']}.{verses[0]['verse']}\n\n{reflection}"
+        else:
+            response = f"{template_response}\n\n{reflection}"
     
     return response
 
@@ -658,9 +672,16 @@ if prompt or ("prompt" in st.session_state and st.session_state.prompt):
     })
     
     with st.chat_message("assistant", avatar="🕉️"):
-        st.write(response)
+        # Parse response into sections for better formatting
+        response_lines = response.split('\n\n')
+        
+        # Section 1: Guidance
+        if response_lines:
+            st.markdown(f"**🕉️ Krishna's Guidance**\n\n{response_lines[0]}")
+        
+        # Section 2: Verse
         if verse_data:
-            # Display FULL verse text (not truncated)
+            st.markdown(f"\n\n**📜 Bhagavad Gita Teaching**")
             st.markdown(f"""
             <div class="citation-card">
             <div style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 12px;">
@@ -675,6 +696,11 @@ if prompt or ("prompt" in st.session_state and st.session_state.prompt):
             # Add copy button
             if st.button("📋 Copy Verse", key=f"copy_response_{verse_data['chapter']}_{verse_data['verse']}", help="Copy full verse"):
                 st.toast("Verse copied to clipboard! ✨", icon="✅")
+        
+        # Section 3: Reflection
+        if len(response_lines) > 1:
+            reflection = "\n\n".join(response_lines[1:])
+            st.markdown(f"\n\n**🌼 Reflection**\n\n{reflection}")
     
     if analytics:
         try:
