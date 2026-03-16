@@ -433,7 +433,7 @@ def generate_response(query, verses, word_limit=100):
     if topic_verses:
         verses = topic_verses[:2]
     
-    # Build verse context
+    # Build verse context (full text, not truncated)
     verse_text = ""
     if verses:
         for v in verses:
@@ -442,16 +442,34 @@ def generate_response(query, verses, word_limit=100):
     # Generate response using template + verse
     template_response = RESPONSE_TEMPLATES.get(topic, "Krishna teaches through the eternal wisdom of the Gita. Reflect on this verse and discover your truth.")
     
-    # Combine template with verse
+    # Combine template with verse (full verse text)
     if verses:
         response = f"{template_response}\n\nThe Gita teaches:\n\n{verses[0]['text']}\n\n— Bhagavad Gita {verses[0]['chapter']}.{verses[0]['verse']}"
     else:
         response = template_response
     
-    # Apply word limit
-    response = limit_words(response, word_limit)
+    # Apply word limit only to template response, not the verse
+    template_words = template_response.split()
+    if len(template_words) > word_limit:
+        template_response = " ".join(template_words[:word_limit])
+        response = f"{template_response}\n\nThe Gita teaches:\n\n{verses[0]['text']}\n\n— Bhagavad Gita {verses[0]['chapter']}.{verses[0]['verse']}" if verses else template_response
     
     return response
+
+def get_reasoning_steps(query, topic, has_topic_verses):
+    """Generate reasoning steps for transparency (recruiter-friendly)"""
+    steps = []
+    steps.append(f"🔍 **Analyzing Query**: Understanding your concern about {topic}")
+    
+    if has_topic_verses:
+        steps.append(f"🎯 **Topic Mapped**: Found sacred verses related to '{topic}'")
+    else:
+        steps.append(f"🔎 **Semantic Search**: Searching {len(load_retriever()['corpus'])} verses for relevance")
+    
+    steps.append(f"📖 **Verse Retrieval**: Identifying most relevant Gita wisdom")
+    steps.append(f"✨ **Generating Guidance**: Crafting Krishna-style response")
+    
+    return steps
 
 @st.cache_resource
 def init_analytics():
@@ -568,7 +586,9 @@ for message in st.session_state.messages:
             v = message["verse"]
             st.markdown(f"""
             <div class="citation-card">
+            <div style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 12px;">
             "{v['text']}"
+            </div>
             <div class="verse-reference">
             — Bhagavad Gita {v['chapter']}.{v['verse']}
             </div>
@@ -611,9 +631,22 @@ if prompt or ("prompt" in st.session_state and st.session_state.prompt):
         st.write(prompt)
     
     with st.spinner("Krishna is reflecting..."):
+        # Get reasoning steps
+        topic = detect_topic(prompt)
+        retriever_state = load_retriever()
+        corpus = retriever_state['corpus']
+        topic_verses = get_topic_verses(topic, corpus)
+        reasoning_steps = get_reasoning_steps(prompt, topic, len(topic_verses) > 0)
+        
+        # Retrieve verses
         verses = retrieve_verses(prompt, top_k=2)
         response = generate_response(prompt, verses, st.session_state.word_limit)
         time.sleep(0.3)
+    
+    # Show reasoning steps
+    with st.expander("🧠 How Krishna Found This Wisdom", expanded=False):
+        for step in reasoning_steps:
+            st.markdown(f"✓ {step}")
     
     verse_data = verses[0] if verses else None
     
@@ -627,9 +660,12 @@ if prompt or ("prompt" in st.session_state and st.session_state.prompt):
     with st.chat_message("assistant", avatar="🕉️"):
         st.write(response)
         if verse_data:
+            # Display FULL verse text (not truncated)
             st.markdown(f"""
             <div class="citation-card">
+            <div style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 12px;">
             "{verse_data['text']}"
+            </div>
             <div class="verse-reference">
             — Bhagavad Gita {verse_data['chapter']}.{verse_data['verse']}
             </div>
@@ -637,7 +673,7 @@ if prompt or ("prompt" in st.session_state and st.session_state.prompt):
             """, unsafe_allow_html=True)
             
             # Add copy button
-            if st.button("📋 Copy Verse", key=f"copy_response_{verse_data['chapter']}_{verse_data['verse']}", help="Copy to clipboard"):
+            if st.button("📋 Copy Verse", key=f"copy_response_{verse_data['chapter']}_{verse_data['verse']}", help="Copy full verse"):
                 st.toast("Verse copied to clipboard! ✨", icon="✅")
     
     if analytics:
