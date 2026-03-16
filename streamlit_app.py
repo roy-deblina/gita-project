@@ -549,7 +549,7 @@ with st.sidebar:
     with col2:
         st.markdown("[💼 LinkedIn](https://www.linkedin.com/in/deblina555/)")
     with col3:
-        st.markdown("[✉️ Email](mailto:deblina.roy@nyu.edu)")
+        st.markdown('<a href="mailto:111deblina@gmail.com" style="color: #D4A574; text-decoration: none; font-size: 1rem;">✉️ Email</a>', unsafe_allow_html=True)
     
     st.markdown("---")
     st.markdown(
