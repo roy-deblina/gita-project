@@ -368,9 +368,9 @@ RESPONSE_TEMPLATES = {
         "The problem is not desire itself, but the attachment to desire. When you want without clinging, you are free.",
     ],
     "destiny": [
-        "Krishna teaches that life is not completely predetermined. You have the freedom to choose your actions, but you are not in control of all outcomes. Destiny and free will coexist—your actions shape your path, but results unfold beyond your control.",
-        "You are neither a puppet of fate nor the sole author of your story. Accept what comes to you, and act with your full power—this is the balance.",
-        "Stop asking 'Is it destined?' and start asking 'What shall I do?'. Your freedom lies in this moment's choice.",
+        "Do not trouble yourself with endless questions about what is destined. Life is shaped by both your sincere actions and the greater flow of the universe. What matters most is how you choose to act in this moment.",
+        "You are neither bound entirely by fate nor fully in control of all outcomes. Your freedom lies in your righteous actions, while results unfold according to the cosmic order.",
+        "Instead of worrying about destiny, focus on what is right and true for you. Through sincere action, your path becomes clear and the universe supports your steps.",
     ],
     "suffering": [
         "The Gita teaches that suffering arises from unfulfilled desires and attachment. By transforming your desires into righteous aspirations and acting without attachment to results, you transcend suffering. Every challenge is an opportunity for spiritual growth.",
@@ -559,20 +559,15 @@ def generate_response(query, verses, word_limit=100):
     
     reflection = reflection_dict.get(topic, "Reflect on this wisdom and apply it to your unique situation. Krishna's teachings are timeless for all ages.")
     
-    # Combine template with verse and reflection (3-section format)
-    if verses:
-        response = f"{template_response}\n\n{verses[0]['text']}\n\n— Bhagavad Gita {verses[0]['chapter']}.{verses[0]['verse']}\n\n{reflection}"
-    else:
-        response = f"{template_response}\n\n{reflection}"
+    # Return only guidance and reflection - verse will be displayed separately via verse_data
+    # This avoids duplicate verse display
+    response = f"{template_response}\n\n{reflection}"
     
-    # Apply word limit only to template response, not the verse or reflection
+    # Apply word limit only to template response, not the reflection
     template_words = template_response.split()
     if len(template_words) > word_limit:
         template_response = " ".join(template_words[:word_limit])
-        if verses:
-            response = f"{template_response}\n\n{verses[0]['text']}\n\n— Bhagavad Gita {verses[0]['chapter']}.{verses[0]['verse']}\n\n{reflection}"
-        else:
-            response = f"{template_response}\n\n{reflection}"
+        response = f"{template_response}\n\n{reflection}"
     
     return response
 
@@ -778,23 +773,23 @@ if prompt or ("prompt" in st.session_state and st.session_state.prompt):
     })
     
     with st.chat_message("assistant", avatar="🕉️"):
-        # Parse response into sections for better formatting
+        # Clean 3-section format: Guidance → Verse → Reflection
         response_lines = response.split('\n\n')
         
-        # Section 1: Guidance
+        # Section 1: Guidance (intro + base wisdom)
         if response_lines:
-            st.markdown(f"**🕉️ Krishna's Guidance**\n\n{response_lines[0]}")
+            st.markdown(f"{response_lines[0]}")
         
-        # Section 2: Verse
+        # Section 2: Verse (displayed via verse_data)
         if verse_data:
-            st.markdown(f"\n\n**📜 Bhagavad Gita Teaching**")
+            st.markdown(f"\n\n**📜 Bhagavad Gita**")
             st.markdown(f"""
             <div class="citation-card">
             <div style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 12px;">
             "{verse_data['text']}"
             </div>
             <div class="verse-reference">
-            — Bhagavad Gita {verse_data['chapter']}.{verse_data['verse']}
+            — Chapter {verse_data['chapter']}, Verse {verse_data['verse']}
             </div>
             </div>
             """, unsafe_allow_html=True)
