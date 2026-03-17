@@ -315,22 +315,92 @@ TOPIC_VERSES = {
     "knowledge": [(4, 7)],  # Krishna's divine nature and knowledge
 }
 
+# Response templates now support variations - list format for dynamic selection
 RESPONSE_TEMPLATES = {
-    "mind": "True mastery comes from within. The mind is both your greatest tool and your deepest challenge. Through discipline, meditation, and unwavering focus, you can transcend the restless nature of the mind.",
-    "fear": "Fear dissolves when you remember your true nature—unchanging, eternal, and divine. Act with courage grounded in duty rather than attachment to outcomes. This is the way of a warrior.",
-    "anger": "Anger arises from unfulfilled desires and ego. Release attachment to outcomes, and anger loses its power. Respond with wisdom and compassion, not reaction.",
-    "failure": "What you call failure is merely a step in your journey. Success and failure are two sides of the same coin. Perform your duty with excellence, and surrender the results to a higher purpose.",
-    "duty": "Your sacred duty is your highest calling. Fulfill your responsibilities without attachment to reward. This righteous action purifies the soul and leads to liberation.",
-    "purpose": "Every soul has a unique purpose. Discover it by following your dharma with full commitment. Your purpose unfolds through sincere action and faith.",
-    "peace": "Peace is not the absence of challenge—it is the clarity of mind that comes from faith, duty, and detachment. Cultivate inner peace through meditation and wisdom.",
-    "karma": "You are the architect of your destiny through your actions. Every action creates consequences. Act with wisdom, intention, and righteousness.",
-    "action": "Act without clutching the fruits of your action. Do your duty fully, but release attachment to success or failure. This is the path to liberation.",
-    "desire": "Desires are the root of suffering. Through wisdom and discipline, transform desires into righteous aspirations. Seek not pleasure, but purpose.",
-    "destiny": "Krishna teaches that life is not completely predetermined. You have the freedom to choose your actions, but you are not in control of all outcomes. Destiny and free will coexist—your actions shape your path, but results unfold beyond your control.",
-    "suffering": "The Gita teaches that suffering arises from unfulfilled desires and attachment. By transforming your desires into righteous aspirations and acting without attachment to results, you transcend suffering. Every challenge is an opportunity for spiritual growth.",
-    "rebirth": "Your true essence is eternal and cannot be destroyed by death. Just as the body changes lifetime after lifetime, your soul—the eternal witness—remains unchanged. This understanding frees you from the fear of death.",
-    "knowledge": "True knowledge is not intellectual—it is direct perception of reality. Krishna teaches that divine knowledge reveals your eternal nature and your connection to all existence. This wisdom liberates you from illusion.",
+    "mind": [
+        "True mastery comes from within. The mind is both your greatest tool and your deepest challenge. Through discipline, meditation, and unwavering focus, you can transcend the restless nature of the mind.",
+        "The mind is a restless force, yet it is your most powerful ally when directed rightly. By cultivating awareness and practicing discipline, you transform it from your enemy into your greatest strength.",
+        "In every moment, you have the power to choose your thoughts. This mastery over the mind is the greatest victory—greater than conquering kingdoms.",
+    ],
+    "fear": [
+        "Fear dissolves when you remember your true nature—unchanging, eternal, and divine. Act with courage grounded in duty rather than attachment to outcomes. This is the way of a warrior.",
+        "What are you truly afraid of? Not death, for you are eternal. Act from your dharma, not from fear, and all doubt will vanish.",
+        "Fear returns again and again until you face it. Know that you are larger than your fear—stand firm in your purpose.",
+    ],
+    "anger": [
+        "Anger arises from unfulfilled desires and ego. Release attachment to outcomes, and anger loses its power. Respond with wisdom and compassion, not reaction.",
+        "Anger is the flame that burns within you. Extinguish it not through suppression, but through understanding its root: the attachment to what you cannot control.",
+        "In the moment of anger, remember: you are not your emotion. Step back, breathe, and choose your response with clarity.",
+    ],
+    "failure": [
+        "What you call failure is merely a step in your journey. Success and failure are two sides of the same coin. Perform your duty with excellence, and surrender the results to a higher purpose.",
+        "Failure plants the seeds of wisdom. Each stumble teaches you something your success never could. Rise again, with renewed understanding.",
+        "Do not measure your worth by outcomes. You have succeeded when you act with integrity and without attachment—whether the world calls it triumph or loss.",
+    ],
+    "duty": [
+        "Your sacred duty is your highest calling. Fulfill your responsibilities without attachment to reward. This righteous action purifies the soul and leads to liberation.",
+        "Your dharma—your unique path and responsibilities—is your gateway to freedom. When you fulfill it with dedication, you align with the cosmic order.",
+        "Do not abandon your duty seeking comfort. Embrace it fully, and in that embrace, find both purpose and peace.",
+    ],
+    "purpose": [
+        "Every soul has a unique purpose. Discover it by following your dharma with full commitment. Your purpose unfolds through sincere action and faith.",
+        "Your purpose is not found through endless searching, but through listening to the deepest call of your heart and acting on it with courage.",
+        "When you align yourself with your true nature, your purpose becomes clear. Trust this inner wisdom.",
+    ],
+    "peace": [
+        "Peace is not the absence of challenge—it is the clarity of mind that comes from faith, duty, and detachment. Cultivate inner peace through meditation and wisdom.",
+        "Peace dwells not in external circumstances, but in the stillness of a mind that has surrendered to what it cannot control.",
+        "To find peace, first understand: you cannot control the world, only your response to it. In this clarity, true peace is born.",
+    ],
+    "karma": [
+        "You are the architect of your destiny through your actions. Every action creates consequences. Act with wisdom, intention, and righteousness.",
+        "Your present circumstances are the harvest of past actions. Yet you are not bound by yesterday—your choices today shape all your tomorrows.",
+        "The law of karma is not punishment—it is the natural unfolding of cause and effect. Act rightly, and right results will follow.",
+    ],
+    "action": [
+        "Act without clutching the fruits of your action. Do your duty fully, but release attachment to success or failure. This is the path to liberation.",
+        "The secret is not in doing less, but in doing without attachment. Pour your full effort into your action, then surrender the outcome.",
+        "You have the right to act, but never to determine the results. This paradox holds the key to freedom.",
+    ],
+    "desire": [
+        "Desires are the root of suffering. Through wisdom and discipline, transform desires into righteous aspirations. Seek not pleasure, but purpose.",
+        "Not all desires must be crushed—some must be refined. Transform selfish wanting into sacred aspiration.",
+        "The problem is not desire itself, but the attachment to desire. When you want without clinging, you are free.",
+    ],
+    "destiny": [
+        "Krishna teaches that life is not completely predetermined. You have the freedom to choose your actions, but you are not in control of all outcomes. Destiny and free will coexist—your actions shape your path, but results unfold beyond your control.",
+        "You are neither a puppet of fate nor the sole author of your story. Accept what comes to you, and act with your full power—this is the balance.",
+        "Stop asking 'Is it destined?' and start asking 'What shall I do?'. Your freedom lies in this moment's choice.",
+    ],
+    "suffering": [
+        "The Gita teaches that suffering arises from unfulfilled desires and attachment. By transforming your desires into righteous aspirations and acting without attachment to results, you transcend suffering. Every challenge is an opportunity for spiritual growth.",
+        "Suffering is the voice of wisdom calling you home. Listen to it—it points the way toward understanding and freedom.",
+        "You suffer not from pain itself, but from your resistance to pain. When you accept what is, suffering transforms into surrender.",
+    ],
+    "rebirth": [
+        "Your true essence is eternal and cannot be destroyed by death. Just as the body changes lifetime after lifetime, your soul—the eternal witness—remains unchanged. This understanding frees you from the fear of death.",
+        "You have lived before this moment, and you will live again. Yet you are never truly born and never truly die. Knowing this, what have you to fear?",
+        "Each life is a chapter in your endless story. What matters is not how many chapters you write, but the wisdom you gather in each one.",
+    ],
+    "knowledge": [
+        "True knowledge is not intellectual—it is direct perception of reality. Krishna teaches that divine knowledge reveals your eternal nature and your connection to all existence. This wisdom liberates you from illusion.",
+        "Books and teachers can point the way, but ultimate knowledge is self-realization. Sit in silence and recognize who you truly are.",
+        "The knowledge that transforms is not accumulated information—it is the awakening to your deepest truth.",
+    ],
 }
+
+def detect_question_type(query):
+    """Detect the type of question to provide contextual framing"""
+    query_lower = query.lower()
+    
+    if any(word in query_lower for word in ["why", "reason", "cause"]):
+        return "philosophical"
+    elif any(word in query_lower for word in ["how", "can i", "should i", "way to"]):
+        return "practical"
+    elif any(word in query_lower for word in ["feel", "sad", "hurt", "painful", "difficult", "struggling", "overwhelmed"]):
+        return "emotional"
+    else:
+        return "general"
 
 def detect_topic(query):
     """Detect the emotional/spiritual topic from user query"""
@@ -432,10 +502,11 @@ def retrieve_verses(query, top_k=2):
         return []
 
 def generate_response(query, verses, word_limit=100):
-    """Generate Krishna-style response from retrieved verses and templates"""
+    """Generate Krishna-style response from retrieved verses and templates with dynamic framing"""
     
-    # Detect topic first
+    # Detect topic and question type
     topic = detect_topic(query)
+    question_type = detect_question_type(query)
     
     # Try to get topic-specific verses
     retriever_state = load_retriever()
@@ -446,8 +517,27 @@ def generate_response(query, verses, word_limit=100):
     if topic_verses:
         verses = topic_verses[:2]
     
-    # Generate response using template + verse
-    template_response = RESPONSE_TEMPLATES.get(topic, "Krishna teaches through the eternal wisdom of the Gita. Reflect on this verse and discover your truth.")
+    # Get base wisdom (now a list of variations)
+    template_options = RESPONSE_TEMPLATES.get(topic, ["Krishna teaches through the eternal wisdom of the Gita. Reflect on this verse and discover your truth."])
+    
+    # If it's a string (shouldn't happen, but fallback), wrap it in a list
+    if isinstance(template_options, str):
+        template_options = [template_options]
+    
+    # Pick a random variation to avoid repetition
+    base_wisdom = random.choice(template_options)
+    
+    # DYNAMIC FRAMING: Add context-aware intro based on question type ✨
+    if question_type == "philosophical":
+        intro = "This is a deep question that points to something fundamental. Krishna's teachings invite you to reflect:\n\n"
+    elif question_type == "practical":
+        intro = "Krishna offers practical guidance for this:\n\n"
+    elif question_type == "emotional":
+        intro = "I understand this concern deeply. Krishna speaks directly to such moments:\n\n"
+    else:
+        intro = "Krishna's wisdom for you:\n\n"
+    
+    template_response = intro + base_wisdom
     
     # Create reflection based on topic
     reflection_dict = {
