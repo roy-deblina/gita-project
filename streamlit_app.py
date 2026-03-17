@@ -309,6 +309,10 @@ TOPIC_VERSES = {
     "karma": [(2, 47), (4, 17)],
     "action": [(3, 19), (2, 47)],
     "desire": [(2, 55), (2, 62)],
+    "destiny": [(2, 47)],  # Free will vs destiny - "right to perform duty, not fruits"
+    "suffering": [(2, 62)],  # Desire as root of suffering
+    "rebirth": [(2, 20)],  # Eternal soul transcends death
+    "knowledge": [(4, 7)],  # Krishna's divine nature and knowledge
 }
 
 RESPONSE_TEMPLATES = {
@@ -322,6 +326,10 @@ RESPONSE_TEMPLATES = {
     "karma": "You are the architect of your destiny through your actions. Every action creates consequences. Act with wisdom, intention, and righteousness.",
     "action": "Act without clutching the fruits of your action. Do your duty fully, but release attachment to success or failure. This is the path to liberation.",
     "desire": "Desires are the root of suffering. Through wisdom and discipline, transform desires into righteous aspirations. Seek not pleasure, but purpose.",
+    "destiny": "Krishna teaches that life is not completely predetermined. You have the freedom to choose your actions, but you are not in control of all outcomes. Destiny and free will coexist—your actions shape your path, but results unfold beyond your control.",
+    "suffering": "The Gita teaches that suffering arises from unfulfilled desires and attachment. By transforming your desires into righteous aspirations and acting without attachment to results, you transcend suffering. Every challenge is an opportunity for spiritual growth.",
+    "rebirth": "Your true essence is eternal and cannot be destroyed by death. Just as the body changes lifetime after lifetime, your soul—the eternal witness—remains unchanged. This understanding frees you from the fear of death.",
+    "knowledge": "True knowledge is not intellectual—it is direct perception of reality. Krishna teaches that divine knowledge reveals your eternal nature and your connection to all existence. This wisdom liberates you from illusion.",
 }
 
 def detect_topic(query):
@@ -329,7 +337,7 @@ def detect_topic(query):
     query = query.lower()
     
     topic_keywords = {
-        "mind": ["mind", "focus", "discipline", "control mind", "thoughts"],
+        "mind": ["mind", "focus", "discipline", "control mind", "thoughts", "meditation"],
         "fear": ["fear", "anxiety", "afraid", "scared", "nervous"],
         "anger": ["anger", "angry", "rage", "furious"],
         "failure": ["failure", "fail", "losing", "lost", "defeat"],
@@ -339,6 +347,10 @@ def detect_topic(query):
         "karma": ["karma", "consequences", "actions"],
         "action": ["action", "act", "do", "perform"],
         "desire": ["desire", "want", "attachment", "longing"],
+        "destiny": ["destiny", "fate", "predetermined", "destined", "control", "free will"],
+        "suffering": ["suffering", "pain", "why bad", "bad things", "sadness"],
+        "rebirth": ["rebirth", "reincarnation", "death", "cycle"],
+        "knowledge": ["knowledge", "wisdom", "truth", "reality", "understand"],
     }
     
     for topic, words in topic_keywords.items():
@@ -449,6 +461,10 @@ def generate_response(query, verses, word_limit=100):
         "karma": "You are not bound by past karma—your present choices write your future. Choose wisely, act righteously, and evolve.",
         "action": "The secret of freedom lies in right action. Do your duty fully, but surrender attachment to the fruits of your labor.",
         "desire": "Transform your desires into righteous aspirations. True happiness comes not from fulfilling every want, but from alignment with your highest purpose.",
+        "destiny": "Focus on your actions with sincerity and let go of anxiety about outcomes. When you act righteously without clinging to results, you align with the natural flow of life.",
+        "suffering": "All suffering has a root—our mistaken attachment to impermanent things. When you understand this truth and align yourself with higher purpose, peace arises naturally.",
+        "rebirth": "Understanding the eternal nature of the soul dissolves fear. You are not limited to this one lifetime—your consciousness transcends all cycles of birth and death.",
+        "knowledge": "True wisdom reveals that you are connected to all existence. This knowledge transforms how you see yourself, others, and the world.",
     }
     
     reflection = reflection_dict.get(topic, "Reflect on this wisdom and apply it to your unique situation. Krishna's teachings are timeless for all ages.")
